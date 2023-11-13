@@ -9,5 +9,8 @@ In order to use th application, the user should first load the `schema.sql` and 
 ## Walk Through Video
 https://drive.google.com/file/d/10EY1_rurdwapDXNCDvBuy2znx7lZjEfC/view
 
-##Tests
+## Tests
 There are no tests written for this application
+
+## Screenshot
+<img width="506" alt="Screenshot 2023-11-13 at 4 52 18 PM" src="https://github.com/MattPoppell/supreme-doodle/assets/142950050/075c1ec8-56d7-414c-9d51-a0ca13bb3e42">
