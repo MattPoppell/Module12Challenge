@@ -1,6 +1,7 @@
 const express = require('express');
 const inquirer = require('inquirer');
-const db = require('./connection.js');
+require('console.table');
+const db = require('./config/connection.js');
 
 const PORT = process.envPORT || 3001;
 const app = express();
@@ -8,8 +9,6 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-
-// This function allows a user to see all of the departments.
 const departmentAll = () => {
     db.query(`SELECT name as Name FROM department;`, (err, res) => {
         if (err) {
@@ -17,11 +16,9 @@ const departmentAll = () => {
         };
         console.log('All departments listed.');
         console.table(res);
-        beginPrompting();
+        prompter();
     });
 };
-
-// This function allows a user to add a department.
 const departmentAdd = () => {
     inquirer.prompt([
         {
@@ -36,12 +33,11 @@ const departmentAdd = () => {
                 if (err) throw err;
                 console.log('New department added.');
                 console.table(data);
-                beginPrompting();
+                prompter();
             });
     });
 };
 
-// This function allows a user to see all of the employees.
 const employeeAll = () => {
     db.query(`SELECT first_name as "First Name", last_name as "Last Name", role_id as Role, manager_id as Manager FROM employees;`, (err, res) => {
         if (err) {
@@ -49,11 +45,10 @@ const employeeAll = () => {
         };
         console.log('All employees listed.');
         console.table(res);
-        beginPrompting();
+        prompter();
     });
 };
 
-// This function allows a user to add an employee.
 const employeeAdd = () => {
     inquirer.prompt([
         {
@@ -81,25 +76,23 @@ const employeeAdd = () => {
             [data.firstName, data.lastName, data.roleId, data.managerId],
             (err) => {
                 if (err) throw err;
-                console.log('The new employee has been added to the database.');
-                beginPrompting();
+                console.log('New employee added.');
+                prompter();
             });
     });
 };
 
-// This function allows a user to see all of the roles.
 const roleAll = () => {
     db.query(`SELECT title as Title, salary as Salary, department_id as "Department ID" FROM role;`, (err, res) => {
         if (err) {
             console.log(err);
         };
-        console.log('All of the roles are now listed.');
+        console.log('All roles listed.');
         console.table(res);
-        beginPrompting();
+        prompter();
     });
 };
 
-// This function allows a user to add a role.
 const roleAdd = () => {
     inquirer.prompt([
         {
@@ -122,14 +115,13 @@ const roleAdd = () => {
             [data.role, data.salary, data.deptRole],
             (err) => {
                 if (err) throw err;
-                console.log('The new role has been added to the database.');
+                console.log('New role added.');
                 console.table(data);
-                beginPrompting();
+                prompter();
             });
     });
 };
 
-// This function allows a user to update an employee's role.
 const employeeRoleUpdate = () => {
     db.query(`SELECT * FROM employees;`, (err, res) => {
         if (err) throw err;
@@ -151,23 +143,21 @@ const employeeRoleUpdate = () => {
             [data.updatedEmployeeRole, data.updateEmployee],
             (err) => {
                 if (err) throw err;
-                console.log('Updated the employee information.');
-                beginPrompting();
+                console.log('Employee information updated.');
+                prompter();
             });
     });
 };
-
-// This is the initial list of questions to prompt a user.
-const beginPrompting = () => {
+const prompter = () => {
     inquirer.prompt([
         {
             type: 'list',
-            name: 'beginPrompting',
+            name: 'prompter',
             message: 'Please select an option.',
             choices: [
-                'List Departments',
-                'List Roles',
-                'List Employees',
+                'List All Departments',
+                'List All Roles',
+                'List All Employees',
                 'Add A Department',
                 'Add A Role',
                 'Add An Employee',
@@ -176,28 +166,28 @@ const beginPrompting = () => {
             ]
         }
     ]).then((data) => {
-        if (data.beginPrompting === 'List Departments') {
+        if (data.prompter === 'List All Departments') {
             departmentAll();
         };
-        if (data.beginPrompting === 'List Roles') {
+        if (data.prompter === 'List All Roles') {
             roleAll();
         };
-        if (data.beginPrompting === 'List Employees') {
+        if (data.prompter === 'List All Employees') {
             employeeAll();
         };
-        if (data.beginPrompting === 'Add A Department') {
+        if (data.prompter === 'Add A Department') {
             departmentAdd();
         };
-        if (data.beginPrompting === 'Add A Role') {
+        if (data.prompter === 'Add A Role') {
             roleAdd();
         };
-        if (data.beginPrompting === 'Add An Employee') {
+        if (data.prompter === 'Add An Employee') {
             employeeAdd();
         };
-        if (data.beginPrompting === 'Update An Employee Role') {
+        if (data.prompter === 'Update An Employee Role') {
             employeeRoleUpdate();
         };
-        if (data.beginPrompting === 'Quit') {
+        if (data.prompter === 'Quit') {
             quit();
         };
     });
@@ -208,11 +198,11 @@ db.connect((err) => {
     app.listen(PORT, () => {
         console.log(`You are now on port ${PORT}`);
     });
-    beginPrompting();
+    prompter();
 });
 
 const quit = () => {
-    console.log('Quiting The Employee Tracker!');
+    console.log('Hasta luego, Amigo!');
     db.end();
     process.exit();
 };
