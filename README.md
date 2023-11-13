@@ -1,4 +1,4 @@
-# supreme-doodle
+# Module 12 Challenge
 
 ## Description
 This is a command line interface application that allows the user to view all of the departments, roles, and employees belonging to a SQL database.  This challenge was designed to demonstrate the ability to create and oirganize a database using MongoDB.  The application allows for the updating and displaying of all information on the database.
